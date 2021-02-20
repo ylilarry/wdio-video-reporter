@@ -124,22 +124,22 @@ describe('Helpers - ', () => {
     });
 
     it('should generate name in form: name--browser--date', () => {
-      expect(helpers.generateFilename(browser, name)).toBe(`${name}--${browser}--${date}-000`);
+      expect(helpers.generateFilename(browser, name)).toBe(`${name}--${browser}`);
     });
 
     it('should replace space with -', () => {
       const testname = name + ' space';
-      expect(helpers.generateFilename(browser, testname)).toBe(`${name}-space--${browser}--${date}-000`);
+      expect(helpers.generateFilename(browser, testname)).toBe(`${name}-space--${browser}`);
     });
 
     it('should replace . with -', () => {
       const testname = name + '.dot';
-      expect(helpers.generateFilename(browser, testname)).toBe(`${name}-dot--${browser}--${date}-000`);
+      expect(helpers.generateFilename(browser, testname)).toBe(`${name}-dot--${browser}`);
     });
 
     it('should remove characters: /?<>\\/:*|"()[]\'<>%', () => {
       const testname = name + '-/?<>\\/:*|"()[]\'<>%comment/';
-      expect(helpers.generateFilename(browser, testname)).toBe(`${name}-comment--${browser}--${date}-000`);
+      expect(helpers.generateFilename(browser, testname)).toBe(`${name}-comment--${browser}`);
     });
 
     it('should keep filenames <= config.maxTestNameCharacters', () => {
@@ -156,10 +156,8 @@ describe('Helpers - ', () => {
     });
 
     it('should keep truncated filenames unique', () => {
-      const sixtyFourChars = '1234567890123456789012345678901234567890123456789012345678901234';
-      const testname256 = sixtyFourChars + sixtyFourChars + sixtyFourChars + sixtyFourChars;
-      const name1 = helpers.generateFilename(browser, testname256);
-      const name2 = helpers.generateFilename(browser, testname256);
+      const name1 = helpers.generateFilename(browser, '1234567890123456789012345678901234567890123456789012345678901234');
+      const name2 = helpers.generateFilename(browser, '123456789012345678901234567890123AAAAA4567890123456789012345678901234');
       expect(name1).not.toBe(name2);
     });
   });

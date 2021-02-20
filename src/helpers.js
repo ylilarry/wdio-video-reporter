@@ -24,29 +24,32 @@ export default {
   },
 
   generateFilename(browserName, fullname) {
-    const date = new Date();
-    const msec = ('000' + date.getMilliseconds()).slice(-3);
-    const timestamp = date.toLocaleString('iso', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-    }).replace(/[ ]/g, '--').replace(/:|\//g, '-') + `-${msec}`;
+    // const date = new Date();
+    // const msec = ('000' + date.getMilliseconds()).slice(-3);
+    // const timestamp = date.toLocaleString('iso', {
+    //   year: 'numeric',
+    //   month: '2-digit',
+    //   day: '2-digit',
+    //   hour: '2-digit',
+    //   minute: '2-digit',
+    //   second: '2-digit',
+    //   hour12: false,
+    // }).replace(/[ ]/g, '--').replace(/:|\//g, '-') + `-${msec}`;
 
     let filename = encodeURIComponent(
       `${
         fullname.replace(/\s+/g, '-')
-      }--${browserName}--${timestamp}`
+      }--${browserName}`
     ).replace(/%../g, '')
      .replace(/\./g, '-')
      .replace(/[/\\?%*:'|"<>()]/g, '');
 
+    const crypto = require('crypto');
+    let hash = crypto.createHash('md5').update(filename).digest('hex').slice(0, 8);
+    const suffix = `--${hash}`;
     if (filename.length > config.maxTestNameCharacters) {
-      const truncLength = (config.maxTestNameCharacters - 2)/2;
-      filename = filename.slice(0, truncLength) + '--' + filename.slice(-truncLength);
+      const truncLength = config.maxTestNameCharacters - suffix.length;
+      filename = filename.slice(0, truncLength) + suffix;
     }
 
     return filename;
